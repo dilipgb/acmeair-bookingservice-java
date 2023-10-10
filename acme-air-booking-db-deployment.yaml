@@ -1,0 +1,54 @@
+##### Booking Database  #####
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    service: acmeair-booking-db
+  name: acmeair-booking-db
+spec:
+  ports:
+  - name: "27017"
+    port: 27017
+    protocol: TCP
+    targetPort: 27017
+  selector:
+    name: acmeair-booking-db
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: acmeair-booking-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: acmeair-booking-db
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: acmeair-booking-db
+    spec:
+      volumes:
+        - name: acmeair-booking-db-1
+          emptyDir: {}
+        - name: acmeair-booking-db-2
+          emptyDir: {}
+      containers:
+      - image: quay.io/dbhagava/s390x/mongo:4
+        name: acmeair-booking-db
+        ports:
+        - containerPort: 27017
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+          - name: acmeair-booking-db-1
+            mountPath: /data/configdb
+          - name: acmeair-booking-db-2
+            mountPath: /data/db
+      restartPolicy: Always

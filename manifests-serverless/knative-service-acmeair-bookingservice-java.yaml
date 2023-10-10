@@ -1,0 +1,57 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: acmeair-bookingservice
+spec:
+  template:
+    metadata:
+      labels:
+        name: acmeair-bookingservice
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9080"
+    spec:
+      containers:
+        - name: acmeair-bookingservice-java
+          image: quay.io/dbhagava/quarkus/acmeair-bookingservice-quarkus-jvm:v2
+          ports:
+          - containerPort: 9080
+          imagePullPolicy: Always
+          env:
+          - name: USERNAME
+            value: admin
+          - name: PASSWORD
+            value: password
+          - name: MONGO_HOST
+            value: acmeair-booking-db
+          - name: ACMEAIR_STACKAA_AUTH_URL
+            value: "http://acmeair-auth-service:9080/auth"
+          - name: ACMEAIR_STACKAA_CUSTOMER_URL
+            value: "http://acmeair-customer-service:9080/customer"
+          - name: ACMEAIR_STACKAA_FLIGHT_URL
+            value: "http://acmeair-flight-service:9080/flight"
+          - name: JAEGER_AGENT_HOST
+            value: jaeger-all-in-one-inmemory-agent
+          - name: JAEGER_AGENT_PORT
+            value: '6832'
+          - name: JAEGER_ENDPOINT
+            value: 'http://jaeger-all-in-one-inmemory-collector:14268/api/traces'
+          - name: ACCESS_LOGGING_ENABLED
+            value: 'false'
+          - name: TRACE_SPEC
+            value: '*=info'
+          - name: LOGGING_FORMAT
+            value: 'simple'
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9080
+            initialDelaySeconds: 120
+            periodSeconds: 15
+
