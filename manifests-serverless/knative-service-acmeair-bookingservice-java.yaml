@@ -22,14 +22,16 @@ spec:
             value: admin
           - name: PASSWORD
             value: password
+          - name: JVM_ARGS
+            value: "-Dcom.acmeair.client.CustomerClient/mp-rest/url=https://acmeair-customerservice-default.apps.m13lp49ocp.lnxne.boe/customer -Dcom.acmeair.client.FlightClient/mp-rest/url=https://acmeair-flightservice-default.apps.m13lp49ocp.lnxne.boe/flight -Dmp.jwt.verify.publickey.location=https://acmeair-authservice-default.apps.m13lp49ocp.lnxne.boe/auth/getJwk"
           - name: MONGO_HOST
             value: acmeair-booking-db
           - name: ACMEAIR_STACKAA_AUTH_URL
-            value: "http://acmeair-auth-service:9080/auth"
+            value: "https://acmeair-authservice-default.apps.m13lp49ocp.lnxne.boe/auth"
           - name: ACMEAIR_STACKAA_CUSTOMER_URL
-            value: "http://acmeair-customer-service:9080/customer"
+            value: "https://acmeair-customerservice-default.apps.m13lp49ocp.lnxne.boe/customer"
           - name: ACMEAIR_STACKAA_FLIGHT_URL
-            value: "http://acmeair-flight-service:9080/flight"
+            value: "https://acmeair-flightservice-default.apps.m13lp49ocp.lnxne.boe/flight"
           - name: JAEGER_AGENT_HOST
             value: jaeger-all-in-one-inmemory-agent
           - name: JAEGER_AGENT_PORT
